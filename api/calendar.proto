@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package calendar;
+
+option go_package = "github.com/KungurtsevNII/calendar;calendar";
+
+service Calendar {
+    rpc Echo (EchoRequest) returns (EchoResponse);
+}
+
+message EchoRequest {
+    string message = 1;
+}
+
+message EchoResponse {
+    string message = 1;
+}
