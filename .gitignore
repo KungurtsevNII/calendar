@@ -1,0 +1,9 @@
+/build
+.idea
+.vscode
+.env
+coverage.txt
+/2
+core
+**/__debug_bin**
+bin/**
