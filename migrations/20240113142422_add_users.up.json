@@ -1,0 +1,22 @@
+{
+  "insert": "users",
+  "documents": [
+    {
+      "user_id": "7ed4f540-6876-4d35-9008-03d7c39ef7eb",
+      "first_name": "Иван",
+      "last_name": "Иванов",
+      "patronymic": "Иванович",
+      "date_of_birth": "2012-12-19T00:00:00.000Z"
+    },
+    {
+      "user_id": "12e50362-aff3-40a7-9d7e-46f3ada7889c",
+      "first_name": "Семен",
+      "last_name": "Львов",
+      "patronymic": "Петрович",
+      "date_of_birth": "2010-01-19T00:00:00.000Z"
+    }
+  ],
+  "ordered": true,
+  "maxTimeMS": 5000,
+  "writeConcern": { "w": "majority", "wtimeout": 5000 }
+}

@@ -1,0 +1,11 @@
+{
+  "create": "users",
+  "capped": false,
+  "validator": {
+  },
+  "validationLevel": "strict",
+  "validationAction": "error",
+  "indexOptionDefaults": "",
+  "comment": "TODO list users collection."
+}
+

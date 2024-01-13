@@ -1,4 +1,14 @@
 env: "local"
-grpc:
+
+grpc_server:
   port: 5001
   timeout: 10h
+
+mongo_db:
+  endpoint: "mongodb://root:password@localhost:27017"
+  connection_timeout: 5s
+  server_selection_timeout: 5s
+  max_pool_size: 15
+  max_conn_idle_time: 0s
+  max_connecting: 2
+  min_pool_size: 10
