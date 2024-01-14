@@ -1,11 +1,29 @@
-{
-  "create": "users",
-  "capped": false,
-  "validator": {
+[
+  {
+    "create": "users",
+    "capped": false,
+    "validator": {
+      "$jsonSchema": {
+        "required": ["user_id", "email", "password_hash"]
+      }
+    },
+    "validationLevel": "strict",
+    "validationAction": "error",
+    "comment": "TODO list users collection."
   },
-  "validationLevel": "strict",
-  "validationAction": "error",
-  "indexOptionDefaults": "",
-  "comment": "TODO list users collection."
-}
+  {
+    "createIndexes": "users",
+    "indexes": [
+      {
+        "key": {
+          "user_id": 1
+        },
+        "name": "user_id_unq_indx",
+        "unique": true
+      }
+    ],
+    "writeConcern": { "w": "majority", "wtimeout": 5000, "j": true },
+    "comment": "Add uniq index user_id"
+  }
+]
 

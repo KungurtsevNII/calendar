@@ -1,0 +1,5 @@
+[{
+  "drop": "users",
+  "writeConcern": { "w": "majority", "wtimeout": 5000, "j": true },
+  "comment": "Delete users collection."
+}]
