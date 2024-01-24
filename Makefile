@@ -17,6 +17,8 @@ PROTOC_VERSION=23.3
 PROTOC_BIN=$(BIN_PATH)/protoc
 PROTOC_GEN_GO_BIN=$(BIN_PATH)/protoc-gen-go
 PROTOC_GEN_GO_GRPC_BIN=$(BIN_PATH)/protoc-gen-go-grpc
+## Папка, в которую складываются все сгенерированные файлы.
+PROTO_OUT=$(PWD)/pkg/pb
 ## Репа от куда качаем protoc.
 PB_REL=https://github.com/protocolbuffers/protobuf/releases
 ## Определяет OS и архитектуру процессора для скачивания protoc бинаря.
@@ -63,13 +65,14 @@ install-proto-generator:
 ## Команда компиоирует proto и генерирует go код.
 .PHONY: generate-proto
 generate-proto:install-proto-generator
+	mkdir -p $(PROTO_OUT)
 	$(PROTOC_BIN) $(PWD)/api/calendar.proto \
 		--proto_path $(PWD)/api \
-		--go_out=$(PWD)/pkg/pb/ \
+		--go_out=$(PROTO_OUT) \
 		--go_opt=paths=source_relative \
 		--plugin=protoc-gen-go=$(PROTOC_GEN_GO_BIN) \
 		--plugin=protoc-gen-go-grpc=$(PROTOC_GEN_GO_GRPC_BIN) \
-		--go-grpc_out=$(PWD)/pkg/pb/ \
+		--go-grpc_out=$(PROTO_OUT) \
 		--go-grpc_opt=paths=source_relative
 
 ## Команда создаст каталог vendor в корне нашего проекта, содержащий исходный код всех зависимостей.
@@ -79,7 +82,7 @@ vendor:
 
 ## Команда собирает бинарник с использование vendor. Бинарки кладет в ./bin.
 .PHONY: build
-build: vendor
+build: generate-proto vendor
 	mkdir -p $(BIN_PATH)
 	GO111MODULE=on go build -mod=vendor -o=$(BIN_PATH)/$(BINARY_NAME) $(MAIN)
 
@@ -94,6 +97,6 @@ clean:
 	rm -fr $(BIN_PATH)
 	rm -fr $(TMP)
 	rm -fr $(PWD)/vendor
-	rm -fr $(PWD)/vendor
+	rm -fr $(PROTO_OUT)
 
 
