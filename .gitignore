@@ -7,3 +7,5 @@ coverage.txt
 core
 **/__debug_bin**
 bin/**
+pkg/pb/**
+vendor/**

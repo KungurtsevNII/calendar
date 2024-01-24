@@ -41,13 +41,18 @@ func MustLoad() *Config {
 // Priority: flag > env > default.
 // Default value is empty string.
 func fetchConfigPath() string {
+	const (
+		configPathCLIArg = "config-path"
+		configPathENV    = "CONFIG_PATH"
+	)
+
 	var res string
 
-	flag.StringVar(&res, "config", "", "path to config file")
+	flag.StringVar(&res, configPathCLIArg, "", "path to config file")
 	flag.Parse()
 
 	if res == "" {
-		res = os.Getenv("CONFIG_PATH")
+		res = os.Getenv(configPathENV)
 	}
 
 	return res
