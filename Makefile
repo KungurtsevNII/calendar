@@ -8,6 +8,12 @@ BINARY_NAME=calendar-service
 ## Папка tmp, в которую скачиваются архивированные бинарники.
 TMP=$(BIN_PATH)/tmp
 
+## Миграции
+## Папка, в которой находяться миграции БД.
+MIGRATIONS_PATH=file://$(PWD)/migrations
+## Путь накатывания миграций для локальной разработки.
+MIGRATE_ENDPOINT_LOCAL=mongodb://root:password@localhost:27017/calendar?authSource=admin
+
 ## Переменные для proto.
 ## Версии proto генераторов.
 PROTOC_GEN_GO_VERSION=v1.5.3
@@ -62,7 +68,7 @@ install-proto-generator:
 	GO111MODULE=on GOBIN=$(BIN_PATH) go install github.com/golang/protobuf/protoc-gen-go@$(PROTOC_GEN_GO_VERSION)
 	GO111MODULE=on GOBIN=$(BIN_PATH) go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@$(PROTOC_GEN_GO_GRPC_VERSION)
 
-## Команда компиоирует proto и генерирует go код.
+## Команда компилирует proto и генерирует go код.
 .PHONY: generate-proto
 generate-proto:install-proto-generator
 	mkdir -p $(PROTO_OUT)
@@ -74,6 +80,30 @@ generate-proto:install-proto-generator
 		--plugin=protoc-gen-go-grpc=$(PROTOC_GEN_GO_GRPC_BIN) \
 		--go-grpc_out=$(PROTO_OUT) \
 		--go-grpc_opt=paths=source_relative
+
+## Команда устанавливает мигратор.
+.PHONY: install-migrator
+install-migrator:
+	GO111MODULE=on GOBIN=$(BIN_PATH) go install -tags 'mongodb' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+
+## Команда накатывает все миграции.
+## Пытается взять endpoint из env, потом берет локальный вариант.
+.PHONY: migrate-up
+migrate-up:install-migrator
+ifneq (${MIGRATE_ENDPOINT},)
+	$(BIN_PATH)/migrate -source $(MIGRATIONS_PATH) -database ${MIGRATE_ENDPOINT} up
+else
+	$(BIN_PATH)/migrate -source $(MIGRATIONS_PATH) -database $(MIGRATE_ENDPOINT_LOCAL) up
+endif
+
+## Команда откатывает все миграции.
+.PHONY: migrate-down
+migrate-down: install-migrator
+ifneq (${MIGRATE_ENDPOINT},)
+	$(BIN_PATH)/migrate -source $(MIGRATIONS_PATH) -database ${MIGRATE_ENDPOINT} down -all
+else
+	$(BIN_PATH)/migrate -source $(MIGRATIONS_PATH) -database ${MIGRATE_ENDPOINT_LOCAL} down -all
+endif
 
 ## Команда создаст каталог vendor в корне нашего проекта, содержащий исходный код всех зависимостей.
 .PHONY: vendor
