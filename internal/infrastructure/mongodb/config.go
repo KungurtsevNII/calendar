@@ -6,6 +6,8 @@ import (
 
 type Config interface {
 	GetEndpoint() string
+	GetDataBaseName() string
+	GetUserCollectionName() string
 	GetConnectionTimeout() time.Duration
 	GetServerSelectionTimeout() time.Duration
 	GetMaxPoolSize() uint64

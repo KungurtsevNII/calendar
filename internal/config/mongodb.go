@@ -7,16 +7,28 @@ import (
 // MongoConfig конфигурация драйвера MongoDB.
 type MongoConfig struct {
 	Endpoint               string        `yaml:"endpoint" validate:"required"`
-	ConnectionTimeout      time.Duration `yaml:"connection_timeout" validate:"required"`
+	DatabaseName           string        `yaml:"database_name" validate:"required"`
+	UserCollectionName     string        `yaml:"user_collection_name" validate:"required"`
+	ConnectionTimeout      time.Duration `yaml:"connection_timeout" validate:"required,gt=0"`
 	ServerSelectionTimeout time.Duration `yaml:"server_selection_timeout" validate:"required"`
-	MaxPoolSize            uint64        `yaml:"max_pool_size" validate:"required"`
-	MaxConnIdleTime        time.Duration `yaml:"max_conn_idle_time"`
-	MaxConnecting          uint64        `yaml:"max_connecting" validate:"required"`
-	MinPoolSize            uint64        `yaml:"min_pool_size" validate:"required"`
+	MaxPoolSize            uint64        `yaml:"max_pool_size" validate:"required,gt=0"`
+	MaxConnIdleTime        time.Duration `yaml:"max_conn_idle_time" validate:"required,gt=0"`
+	MaxConnecting          uint64        `yaml:"max_connecting" validate:"required,gt=0"`
+	MinPoolSize            uint64        `yaml:"min_pool_size" validate:"required,gt=0"`
 }
 
 // GetEndpoint точка подключения к MongoDB.
 func (mc MongoConfig) GetEndpoint() string {
+	return mc.Endpoint
+}
+
+// GetDatabaseName название таблицы.
+func (mc MongoConfig) GetDatabaseName() string {
+	return mc.Endpoint
+}
+
+// GetUserCollectionName название коллекции пользователей.
+func (mc MongoConfig) GetUserCollectionName() string {
 	return mc.Endpoint
 }
 

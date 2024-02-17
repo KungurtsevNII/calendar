@@ -6,6 +6,19 @@ option go_package = "github.com/KungurtsevNII/calendar;calendar";
 
 service Calendar {
     rpc Echo (EchoRequest) returns (EchoResponse);
+    rpc GetUserByID (GetUserByIDRequest) returns (GetUserByIDResponse);
+}
+
+message GetUserByIDRequest {
+    string user_id = 1;
+}
+
+message GetUserByIDResponse {
+    string user_id = 1;
+    string email = 2;
+    string first_name = 3;
+    string last_name = 4;
+    string patronymic = 5;
 }
 
 message EchoRequest {

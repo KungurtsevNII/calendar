@@ -48,3 +48,7 @@ func New(ctx context.Context, cfg Config) (*MongoDB, error) {
 		cfg:    cfg,
 	}, nil
 }
+
+func (db *MongoDB) Disconnect(ctx context.Context) error {
+	return db.client.Disconnect(ctx)
+}

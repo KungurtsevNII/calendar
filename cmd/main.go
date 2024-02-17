@@ -15,7 +15,6 @@ import (
 	pb "github.com/KungurtsevNII/calendar/pkg/pb"
 )
 
-// protoc calendar.proto --go_out=pkg/pb --go_opt=paths=source_relative --proto_path=api --go-grpc_out=pkg/pb --go-grpc_opt=paths=source_relative
 func main() {
 	ctx := context.Background()
 
@@ -32,6 +31,12 @@ func initMongo(ctx context.Context, cfg config.MongoConfig) *mongodb.MongoDB {
 	if err != nil {
 		log.Fatalf("can't create mongo db driver: %s", err.Error())
 	}
+
+	defer func() {
+		if err = db.Disconnect(ctx); err != nil {
+			panic(err)
+		}
+	}()
 
 	return db
 }

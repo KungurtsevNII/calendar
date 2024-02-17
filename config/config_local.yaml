@@ -5,7 +5,7 @@ grpc_server:
   timeout: 10h
 
 mongo_db:
-  endpoint: "mongodb://root:password@localhost:27017"
+  endpoint: "mongodb://root:password@localhost:27017/calendar"
   connection_timeout: 5s
   server_selection_timeout: 5s
   max_pool_size: 15
