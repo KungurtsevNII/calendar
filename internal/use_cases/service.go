@@ -9,7 +9,7 @@ import (
 )
 
 type userRepo interface {
-	GetUserByID(ctx context.Context, userID uuid.UUID) (domain.User, error)
+	GetUserByID(ctx context.Context, userID uuid.UUID) (*domain.User, error)
 }
 
 type Service struct {

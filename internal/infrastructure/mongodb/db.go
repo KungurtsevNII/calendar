@@ -15,8 +15,9 @@ const (
 
 // MongoDB обертка над стандартным драйвером Mongo.
 type MongoDB struct {
-	client *mongo.Client
-	cfg    Config
+	client         *mongo.Client
+	cfg            Config
+	userCollection *mongo.Collection
 }
 
 // New возвращает новую обертку над драйвером MongoDB.
@@ -43,9 +44,12 @@ func New(ctx context.Context, cfg Config) (*MongoDB, error) {
 		return nil, errors.Wrap(err, operation)
 	}
 
+	userCollection := client.Database(cfg.GetDatabaseName()).Collection(cfg.GetUserCollectionName())
+
 	return &MongoDB{
-		client: client,
-		cfg:    cfg,
+		client:         client,
+		cfg:            cfg,
+		userCollection: userCollection,
 	}, nil
 }
 

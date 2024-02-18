@@ -6,7 +6,7 @@ import (
 
 type Config interface {
 	GetEndpoint() string
-	GetDataBaseName() string
+	GetDatabaseName() string
 	GetUserCollectionName() string
 	GetConnectionTimeout() time.Duration
 	GetServerSelectionTimeout() time.Duration

@@ -1,3 +1,4 @@
+app_name: "calendar"
 env: "local"
 
 grpc_server:
@@ -5,7 +6,9 @@ grpc_server:
   timeout: 10h
 
 mongo_db:
-  endpoint: "mongodb://root:password@localhost:27017/calendar"
+  endpoint: "mongodb://root:password@localhost:27017/calendar?authSource=admin"
+  database_name: "calendar"
+  user_collection_name: "users"
   connection_timeout: 5s
   server_selection_timeout: 5s
   max_pool_size: 15
