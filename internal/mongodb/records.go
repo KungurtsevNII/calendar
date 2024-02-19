@@ -24,6 +24,11 @@ func (us UserRecord) ToDomain() (*domain.User, error) {
 	}
 
 	return &domain.User{
-		ID: userUUID,
+		ID:          userUUID,
+		Email:       us.Email,
+		FirstName:   us.FirstName,
+		LastName:    us.LastName,
+		Patronymic:  us.Patronymic,
+		DateOfBirth: us.DateOfBirth,
 	}, nil
 }

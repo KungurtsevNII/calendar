@@ -13,7 +13,7 @@ import (
 
 	"github.com/KungurtsevNII/calendar/internal/config"
 	"github.com/KungurtsevNII/calendar/internal/grpc_server"
-	"github.com/KungurtsevNII/calendar/internal/infrastructure/mongodb"
+	"github.com/KungurtsevNII/calendar/internal/mongodb"
 	"github.com/KungurtsevNII/calendar/internal/use_cases"
 	pb "github.com/KungurtsevNII/calendar/pkg/pb"
 )

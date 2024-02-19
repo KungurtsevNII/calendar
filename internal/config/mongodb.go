@@ -15,6 +15,7 @@ type MongoConfig struct {
 	MaxConnIdleTime        time.Duration `yaml:"max_conn_idle_time"`
 	MaxConnecting          uint64        `yaml:"max_connecting" validate:"required,gt=0"`
 	MinPoolSize            uint64        `yaml:"min_pool_size" validate:"required,gt=0"`
+	UserByIDTimeout        time.Duration `yaml:"user_by_id_timeout" validate:"required,gt=0"`
 }
 
 // GetEndpoint точка подключения к MongoDB.
@@ -75,4 +76,8 @@ func (mc MongoConfig) GetMaxConnecting() uint64 {
 // Значение по умолчанию — 0.
 func (mc MongoConfig) GetMinPoolSize() uint64 {
 	return mc.MinPoolSize
+}
+
+func (mc MongoConfig) GetUserByIDTimeout() time.Duration {
+	return mc.UserByIDTimeout
 }

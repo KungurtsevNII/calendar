@@ -14,4 +14,5 @@ type Config interface {
 	GetMaxConnIdleTime() time.Duration
 	GetMaxConnecting() uint64
 	GetMinPoolSize() uint64
+	GetUserByIDTimeout() time.Duration
 }

@@ -3,7 +3,6 @@ package mongodb
 import (
 	"context"
 	"errors"
-	"time"
 
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
@@ -12,12 +11,8 @@ import (
 	"github.com/KungurtsevNII/calendar/internal/domain"
 )
 
-const (
-	getUserByIDTimeout = 200000 * time.Millisecond
-)
-
 func (db *MongoDB) GetUserByID(ctx context.Context, userID uuid.UUID) (*domain.User, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), getUserByIDTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), db.cfg.GetUserByIDTimeout())
 	defer cancel()
 
 	var record UserRecord
