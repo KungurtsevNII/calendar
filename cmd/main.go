@@ -30,17 +30,20 @@ func main() {
 		log.Fatalf("can't create use cases service: %s", err.Error())
 	}
 
+	go closer.ListenSignal(syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM)
 	initAndStartGRPCServer(cfg.GRPC, useCases)
 }
 
 func initMongo(ctx context.Context, cfg config.MongoConfig) *mongodb.MongoDB {
-	db, err := mongodb.New(ctx, cfg)
+	db, stop, err := mongodb.New(ctx, cfg)
 	if err != nil {
 		log.Fatalf("failed to create mongo db driver: %s", err.Error())
 	}
 
 	closer.Add(func() {
-		_ = db.Disconnect(ctx)
+		if err := stop(ctx); err != nil {
+			panic("asdsad")
+		}
 	})
 
 	return db
@@ -61,9 +64,8 @@ func initAndStartGRPCServer(cfg config.GRPCServerConfig, service *use_cases.Serv
 	log.Printf("gRPC server listening at %s", grpcListener.Addr())
 
 	closer.Add(grpcServer.GracefulStop)
-	go closer.ListenSignal(syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM)
 
 	if err := grpcServer.Serve(grpcListener); err != nil {
-		log.Fatalf("failed to start grpc server: %s", err.Error())
+		log.Fatalf("failed to serve grpc: %s", err.Error())
 	}
 }

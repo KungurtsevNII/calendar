@@ -15,3 +15,4 @@ mongo_db:
   max_conn_idle_time: 0s
   max_connecting: 2
   min_pool_size: 10
+  user_by_id_timeout: 500ms

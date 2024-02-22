@@ -21,9 +21,9 @@ func (s *CalendarServer) GetUserByID(
 
 	return &pb.GetUserByIDResponse{
 		UserId:     result.ID.String(),
-		Email:      "",
-		FirstName:  "",
-		LastName:   "",
-		Patronymic: "",
+		Email:      result.Email,
+		FirstName:  result.FirstName,
+		LastName:   result.LastName,
+		Patronymic: result.Patronymic,
 	}, nil
 }

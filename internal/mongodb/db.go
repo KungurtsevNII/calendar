@@ -21,7 +21,7 @@ type MongoDB struct {
 }
 
 // New возвращает новую обертку над драйвером MongoDB.
-func New(ctx context.Context, cfg Config) (*MongoDB, error) {
+func New(ctx context.Context, cfg Config) (*MongoDB, func(ctx context.Context) error, error) {
 	const operation = service + "New"
 
 	opts := options.Client().
@@ -36,12 +36,12 @@ func New(ctx context.Context, cfg Config) (*MongoDB, error) {
 
 	client, err := mongo.Connect(ctx, opts)
 	if err != nil {
-		return nil, errors.Wrap(err, operation)
+		return nil, nil, errors.Wrap(err, operation)
 	}
 
 	err = client.Ping(ctx, readpref.Primary())
 	if err != nil {
-		return nil, errors.Wrap(err, operation)
+		return nil, nil, errors.Wrap(err, operation)
 	}
 
 	userCollection := client.Database(cfg.GetDatabaseName()).Collection(cfg.GetUserCollectionName())
@@ -50,9 +50,5 @@ func New(ctx context.Context, cfg Config) (*MongoDB, error) {
 		client:         client,
 		cfg:            cfg,
 		userCollection: userCollection,
-	}, nil
-}
-
-func (db *MongoDB) Disconnect(ctx context.Context) error {
-	return db.client.Disconnect(ctx)
+	}, client.Disconnect, nil
 }
