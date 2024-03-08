@@ -18,7 +18,7 @@ MIGRATE_ENDPOINT_LOCAL=mongodb://root:password@localhost:27017/calendar?authSour
 ## Версии proto генераторов.
 PROTOC_GEN_GO_VERSION=v1.5.3
 PROTOC_GEN_GO_GRPC_VERSION=v1.3.0
-PROTOC_VERSION=23.3
+PROTOC_VERSION=25.3
 ## Полные имена бинарников для proto генерации.
 PROTOC_BIN=$(BIN_PATH)/protoc
 PROTOC_GEN_GO_BIN=$(BIN_PATH)/protoc-gen-go
@@ -46,6 +46,9 @@ endif
 ifneq ($(filter arm%,$(UNAME_M)),)
 	PROTOC_OS_ARC :=$(PROTOC_OS_ARC)-aarch_64
 endif
+ifneq ($(filter aarch%,$(UNAME_M)),)
+	PROTOC_OS_ARC :=$(PROTOC_OS_ARC)-aarch_64
+endif
 
 ## Команда форматирует код.
 .PHONY: fmt
@@ -61,7 +64,7 @@ install-proto-generator:
 		curl -#fLo ${TMP}/protoc-${PROTOC_VERSION}.zip "${PB_REL}/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-${PROTOC_OS_ARC}.zip"; \
 	fi; \
 	}
-	unzip -o -u ${TMP}/protoc-${PROTOC_VERSION}.zip -d ${TMP}/protoc-${PROTOC_VERSION}
+	unzip -o ${TMP}/protoc-${PROTOC_VERSION}.zip -d ${TMP}/protoc-${PROTOC_VERSION}
 	cp -rf ${TMP}/protoc-${PROTOC_VERSION}/bin/protoc $(BIN_PATH)
 	##cp -rf ${TMP}/protoc-${PROTOC_VERSION}/include/* $(BIN_PATH)/include/
 
@@ -114,12 +117,18 @@ vendor:
 .PHONY: build
 build: generate-proto vendor
 	mkdir -p $(BIN_PATH)
-	GO111MODULE=on go build -mod=vendor -o=$(BIN_PATH)/$(BINARY_NAME) $(MAIN)
+	GO111MODULE=on go build -mod=vendor -ldflags="-s -w" -o=$(BIN_PATH)/$(BINARY_NAME) $(MAIN)
 
 ## Команда запускает скомпилированный бинарник. Передает cli параметр, который указывает путь к локальным конфигам.
 .PHONY: run-local
 run-local: build
 	$(BIN_PATH)/$(BINARY_NAME) -config-path=./config/config_local.yaml
+
+## Запускает сервис в Docker c локальными конфигами.
+.PHONY: run-docker-local
+run-docker-local:
+	docker build . -t $(BINARY_NAME) \
+	&& docker run --p 5051:5051 $(BINARY_NAME)
 
 ## Команда удаляет временные файлы, кэш и т.д.
 .PHONY: clean

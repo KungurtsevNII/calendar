@@ -6,7 +6,7 @@ import (
 
 // MongoConfig конфигурация драйвера MongoDB.
 type MongoConfig struct {
-	Endpoint               string        `yaml:"endpoint" validate:"required"`
+	Endpoint               string        `yaml:"endpoint" validate:"required" env:"MONGO_ENDPOINT"`
 	DatabaseName           string        `yaml:"database_name" validate:"required"`
 	UserCollectionName     string        `yaml:"user_collection_name" validate:"required"`
 	ConnectionTimeout      time.Duration `yaml:"connection_timeout" validate:"required,gt=0"`

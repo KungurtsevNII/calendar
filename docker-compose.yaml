@@ -1,0 +1,17 @@
+version: "3.3"
+
+volumes:
+  calendar-mongo-data:
+
+services:
+  mongo:
+    container_name: calendar-mongo
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - calendar-mongo-data:/data/db
