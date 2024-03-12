@@ -128,7 +128,7 @@ run-local: build
 .PHONY: run-docker-local
 run-docker-local:
 	docker build . -t $(BINARY_NAME) \
-	&& docker run --p 5051:5051 $(BINARY_NAME)
+	&& docker run -p 5051:5051 -e CONFIG_PATH=/bin/config/config_local.yaml $(BINARY_NAME)
 
 ## Команда удаляет временные файлы, кэш и т.д.
 .PHONY: clean

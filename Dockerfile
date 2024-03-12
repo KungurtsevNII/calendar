@@ -20,6 +20,4 @@ EXPOSE 5001
 COPY --from=builder /calendar/bin/calendar-service /bin/calendar-service
 COPY --from=builder /calendar/config /bin/config
 
-ENV CONFIG_PATH "/bin/config/config_local.yaml"
-
 ENTRYPOINT ["/bin/calendar-service"]
